@@ -1,400 +1,718 @@
-
-```html
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>法人信息登记</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>个体工商户报税</title>
+    <!-- 使用 Google Material Icons (可选) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <style>
+        /* ===== 全局重置 & 基础 ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
         }
 
         body {
-            background-color: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(145deg, #f6f9fc 0%, #e9f0f5 100%);
             min-height: 100vh;
-            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
         }
 
+        /* ===== 卡片容器 ===== */
         .card {
-            background-color: #ffffff;
-            max-width: 420px;
+            max-width: 640px;
             width: 100%;
-            border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-            padding: 28px 24px 32px;
-            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border-radius: 40px;
+            padding: 48px 40px 40px;
+            box-shadow:
+                0 30px 60px -20px rgba(0, 20, 40, 0.25),
+                0 8px 24px -8px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: transform 0.25s ease, box-shadow 0.3s ease;
         }
 
-        /* 头部微信支付标识 */
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 40px 80px -20px rgba(0, 20, 40, 0.3),
+                0 8px 24px -8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== 头部 ===== */
         .header {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 28px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #f0f0f0;
+            gap: 14px;
+            margin-bottom: 32px;
         }
 
-        .header-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .wechat-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #07C160;
-            color: #fff;
-            font-weight: 600;
-            font-size: 14px;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            letter-spacing: 0.5px;
-        }
-
-        .header-title span {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1a1a1a;
-        }
-
-        .header-badge {
-            background-color: #e8f8ee;
-            color: #07C160;
-            font-size: 12px;
-            font-weight: 500;
-            padding: 4px 12px;
-            border-radius: 20px;
-            border: 1px solid #b7e9cc;
-        }
-
-        /* 表单字段 */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 14px;
-            font-weight: 500;
-            color: #333333;
-            margin-bottom: 6px;
-            letter-spacing: 0.3px;
-        }
-
-        .form-label .required {
-            color: #ff4d4f;
-            margin-right: 2px;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 12px 16px;
-            font-size: 15px;
-            color: #1a1a1a;
-            background-color: #f7f8fa;
-            border: 1px solid #e5e6eb;
-            border-radius: 10px;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            -webkit-appearance: none;
-        }
-
-        .form-input:focus {
-            border-color: #07C160;
-            background-color: #ffffff;
-            box-shadow: 0 0 0 3px rgba(7, 193, 96, 0.12);
-        }
-
-        .form-input::placeholder {
-            color: #b0b3bf;
-            font-size: 14px;
-        }
-
-        /* 微信支付推荐区域 */
-        .promo-section {
-            background: linear-gradient(135deg, #f0faf4 0%, #e8f8ee 100%);
-            border-radius: 12px;
-            padding: 16px 18px;
-            margin: 26px 0 22px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid #b7e9cc;
-        }
-
-        .promo-text {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .promo-icon {
-            background-color: #07C160;
-            color: #fff;
-            font-size: 20px;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+        .header-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, #1e3c5c, #2b5a7a);
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #fff;
+            font-size: 28px;
+            box-shadow: 0 8px 16px -6px rgba(27, 55, 77, 0.3);
             flex-shrink: 0;
-            font-weight: 600;
         }
 
-        .promo-text .text {
-            font-size: 15px;
-            font-weight: 600;
-            color: #1a7a3a;
-            letter-spacing: 0.5px;
+        .header-text h1 {
+            font-size: 24px;
+            font-weight: 650;
+            letter-spacing: -0.3px;
+            color: #0b1e2c;
+            line-height: 1.2;
         }
 
-        .promo-text .sub-text {
-            font-size: 13px;
-            color: #3d8b5e;
-            font-weight: 400;
-        }
-
-        .wechat-pay-logo {
-            background-color: #07C160;
-            color: #fff;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-        }
-
-        /* 底部推荐人信息 */
-        .footer-recommend {
-            background-color: #fafafa;
-            border-radius: 10px;
-            padding: 14px 16px;
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-left: 4px solid #07C160;
-        }
-
-        .recommend-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .recommend-label {
+        .header-text p {
             font-size: 14px;
-            color: #666;
-            font-weight: 400;
+            color: #5e717f;
+            font-weight: 450;
+            letter-spacing: 0.2px;
+            margin-top: 2px;
         }
 
-        .recommend-name {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1a1a1a;
-            background: #fff;
-            padding: 2px 12px;
-            border-radius: 6px;
-            border: 1px solid #e0e0e0;
+        /* ===== 表单 ===== */
+        .form-group {
+            margin-bottom: 24px;
         }
 
-        .recommend-name small {
-            font-weight: 400;
-            color: #888;
-            font-size: 13px;
-        }
-
-        .footer-wechat-badge {
+        .form-group label {
             display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a3142;
+            letter-spacing: 0.3px;
+            margin-bottom: 6px;
+        }
+
+        .form-group label .material-symbols-outlined {
+            font-size: 18px;
+            color: #4b6f89;
+        }
+
+        .form-group .required {
+            color: #d14545;
+            font-weight: 600;
+            margin-left: 2px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 15px;
+            font-family: inherit;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1.5px solid #dce5ed;
+            border-radius: 16px;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            color: #0b1e2c;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #2b5a7a;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(43, 90, 122, 0.12), inset 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #a0b4c4;
+            font-weight: 400;
+            font-size: 14px;
+        }
+
+        .form-group input.error,
+        .form-group textarea.error {
+            border-color: #d14545;
+            background: #fff8f8;
+            box-shadow: 0 0 0 4px rgba(209, 69, 69, 0.08);
+        }
+
+        .form-group .hint {
+            display: block;
+            font-size: 12.5px;
+            color: #7a8f9e;
+            margin-top: 6px;
+            padding-left: 4px;
+            font-weight: 450;
+        }
+
+        .form-group .error-msg {
+            display: none;
+            font-size: 13px;
+            color: #d14545;
+            margin-top: 6px;
+            padding-left: 4px;
+            font-weight: 500;
             align-items: center;
             gap: 4px;
-            background-color: #07C160;
-            color: #fff;
-            padding: 4px 12px 4px 8px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
         }
 
-        .footer-wechat-badge span {
+        .form-group .error-msg.visible {
+            display: flex;
+        }
+
+        .form-group .error-msg .material-symbols-outlined {
             font-size: 16px;
-            line-height: 1;
         }
 
-        /* 操作按钮 */
-        .action-btn {
+        /* ===== 业务字段 (textarea) ===== */
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+            max-height: 200px;
+            line-height: 1.5;
+        }
+
+        /* ===== 提交按钮 ===== */
+        .submit-row {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .btn-submit {
             width: 100%;
-            padding: 14px;
-            margin-top: 28px;
-            background-color: #07C160;
-            color: #ffffff;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #1e3c5c, #2b5a7a);
+            border: none;
+            border-radius: 20px;
             font-size: 17px;
             font-weight: 600;
-            border: none;
-            border-radius: 12px;
+            color: #fff;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 12px rgba(7, 193, 96, 0.3);
+            transition: transform 0.15s ease, box-shadow 0.25s ease, background 0.25s ease;
+            box-shadow: 0 8px 24px -6px rgba(27, 55, 77, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: 0.4px;
         }
 
-        .action-btn:active {
-            background-color: #06ad56;
-            transform: scale(0.98);
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #234f72, #32658a);
+            box-shadow: 0 14px 32px -8px rgba(27, 55, 77, 0.45);
         }
 
-        /* 提示信息 */
-        .footnote {
-            text-align: center;
-            font-size: 12px;
-            color: #b0b3bf;
-            margin-top: 16px;
-            letter-spacing: 0.2px;
+        .btn-submit:active {
+            transform: translateY(0px);
+            box-shadow: 0 4px 12px -4px rgba(27, 55, 77, 0.3);
         }
 
-        /* 响应式调整 */
-        @media (max-width: 480px) {
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: 0 4px 12px -4px rgba(27, 55, 77, 0.2);
+        }
+
+        .btn-submit .material-symbols-outlined {
+            font-size: 22px;
+        }
+
+        /* ===== 提交成功横幅 ===== */
+        .success-banner {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            background: #e6f4ea;
+            border: 1px solid #b7d9c4;
+            border-radius: 16px;
+            padding: 14px 20px;
+            margin-top: 8px;
+            color: #1e5a3a;
+            font-weight: 500;
+            font-size: 15px;
+            animation: fadeSlideUp 0.4s ease forwards;
+        }
+
+        .success-banner.visible {
+            display: flex;
+        }
+
+        .success-banner .material-symbols-outlined {
+            font-size: 24px;
+            color: #2d7a4e;
+        }
+
+        @keyframes fadeSlideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 520px) {
             .card {
-                padding: 20px 16px 24px;
+                padding: 32px 20px 28px;
+                border-radius: 28px;
             }
-            .promo-section {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
+            .header-text h1 {
+                font-size: 20px;
             }
-            .promo-text .text {
+            .header-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 22px;
+                border-radius: 14px;
+            }
+            .form-group input,
+            .form-group textarea {
+                padding: 12px 16px;
                 font-size: 14px;
             }
-            .footer-recommend {
-                flex-direction: column;
-                align-items: flex-start;
+            .btn-submit {
+                font-size: 15px;
+                padding: 14px 16px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .card {
+                padding: 24px 16px 20px;
+            }
+            .header {
                 gap: 10px;
             }
-            .header-title span {
-                font-size: 16px;
+            .header-text h1 {
+                font-size: 18px;
             }
+        }
+
+        /* ===== 工具类 ===== */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
         }
     </style>
 </head>
 <body>
 
-    <div class="card">
-
+    <div class="card" role="main" aria-labelledby="form-title">
         <!-- 头部 -->
         <div class="header">
-            <div class="header-title">
-                <span class="wechat-icon">微信</span>
-                <span>法人信息登记</span>
+            <div class="header-icon" aria-hidden="true">
+                <span class="material-symbols-outlined">receipt_long</span>
             </div>
-            <div class="header-badge">认证</div>
+            <div class="header-text">
+                <h1 id="form-title">个体工商户报税</h1>
+                <p>请如实填写以下信息，用于税务申报</p>
+            </div>
         </div>
 
-        <!-- 表单区域 -->
-        <form id="infoForm" onsubmit="return false;">
+        <!-- 表单 -->
+        <form id="taxForm" novalidate>
+            <!-- 法人 -->
             <div class="form-group">
-                <label class="form-label" for="legalPerson"><span class="required">*</span>法人：</label>
-                <input type="text" id="legalPerson" class="form-input" placeholder="请输入法人姓名" value="">
+                <label for="legalPerson">
+                    <span class="material-symbols-outlined" aria-hidden="true">person</span>
+                    法人
+                    <span class="required">*</span>
+                </label>
+                <input
+                type="text"
+                id="legalPerson"
+                name="legalPerson"
+                placeholder="请输入法人姓名"
+                autocomplete="name"
+                required
+                aria-required="true"
+                />
+                <span class="error-msg" id="legalPersonError">
+                    <span class="material-symbols-outlined" aria-hidden="true">error</span>
+                    请输入法人姓名（2~20个字符）
+                </span>
             </div>
 
+            <!-- 主体名称 -->
             <div class="form-group">
-                <label class="form-label" for="entityName"><span class="required">*</span>主体名称：</label>
-                <input type="text" id="entityName" class="form-input" placeholder="请输入企业/个体户全称" value="">
+                <label for="entityName">
+                    <span class="material-symbols-outlined" aria-hidden="true">storefront</span>
+                    主体名称
+                    <span class="required">*</span>
+                </label>
+                <input
+                type="text"
+                id="entityName"
+                name="entityName"
+                placeholder="请输入个体工商户名称"
+                autocomplete="organization"
+                required
+                aria-required="true"
+                />
+                <span class="error-msg" id="entityNameError">
+                    <span class="material-symbols-outlined" aria-hidden="true">error</span>
+                    请输入主体名称（2~50个字符）
+                </span>
             </div>
 
+            <!-- 身份证号 -->
             <div class="form-group">
-                <label class="form-label" for="idNumber"><span class="required">*</span>身份证号：</label>
-                <input type="text" id="idNumber" class="form-input" placeholder="请输入18位身份证号码" value="">
+                <label for="idNumber">
+                    <span class="material-symbols-outlined" aria-hidden="true">badge</span>
+                    身份证号
+                    <span class="required">*</span>
+                </label>
+                <input
+                type="text"
+                id="idNumber"
+                name="idNumber"
+                placeholder="请输入18位身份证号码"
+                inputmode="numeric"
+                autocomplete="off"
+                required
+                aria-required="true"
+                />
+                <span class="hint">18 位数字或最后一位为 X</span>
+                <span class="error-msg" id="idNumberError">
+                    <span class="material-symbols-outlined" aria-hidden="true">error</span>
+                    请输入有效的18位身份证号码
+                </span>
             </div>
 
+            <!-- 手机号 -->
             <div class="form-group">
-                <label class="form-label" for="phone"><span class="required">*</span>手机号：</label>
-                <input type="tel" id="phone" class="form-input" placeholder="请输入大陆手机号" value="">
+                <label for="phone">
+                    <span class="material-symbols-outlined" aria-hidden="true">call</span>
+                    手机号
+                    <span class="required">*</span>
+                </label>
+                <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="请输入11位手机号码"
+                inputmode="numeric"
+                autocomplete="tel"
+                required
+                aria-required="true"
+                />
+                <span class="hint">11 位中国大陆手机号</span>
+                <span class="error-msg" id="phoneError">
+                    <span class="material-symbols-outlined" aria-hidden="true">error</span>
+                    请输入有效的11位手机号码
+                </span>
             </div>
 
+            <!-- 业务 -->
             <div class="form-group">
-                <label class="form-label" for="business">业务：</label>
-                <input type="text" id="business" class="form-input" placeholder="请简要描述经营业务" value="">
+                <label for="business">
+                    <span class="material-symbols-outlined" aria-hidden="true">description</span>
+                    业务
+                    <span class="required">*</span>
+                </label>
+                <textarea
+                id="business"
+                name="business"
+                placeholder="请描述主营业务范围，例如：餐饮服务、零售贸易、咨询服务等"
+                required
+                aria-required="true"
+                rows="3"
+                ></textarea>
+                <span class="error-msg" id="businessError">
+                    <span class="material-symbols-outlined" aria-hidden="true">error</span>
+                    请描述业务范围（至少5个字符）
+                </span>
             </div>
-        </form>
 
-        <!-- 推荐使用微信支付 高亮区域 -->
-        <div class="promo-section">
-            <div class="promo-text">
-                <div class="promo-icon">💚</div>
-                <div>
-                    <div class="text">推荐使用微信支付</div>
-                    <div class="sub-text">安全 · 便捷 · 高效</div>
+            <!-- 提交按钮 & 成功提示 -->
+            <div class="submit-row">
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+                    提交资料
+                </button>
+                <div class="success-banner" id="successBanner" role="status">
+                    <span class="material-symbols-outlined" aria-hidden="true">verified</span>
+                    <span>提交成功！税务资料已收到，请等待审核。</span>
                 </div>
             </div>
-            <div class="wechat-pay-logo">微信支付</div>
-        </div>
-
-        <!-- 底部推荐人信息（依据图片内容） -->
-        <div class="footer-recommend">
-            <div class="recommend-info">
-                <span class="recommend-label">推荐人 / 经办人：</span>
-                <span class="recommend-name">寇云荣 <small>（**荣）</small></span>
-            </div>
-            <div class="footer-wechat-badge">
-                <span>🟢</span> 微信支付
-            </div>
-        </div>
-
-        <!-- 提交按钮 -->
-        <button class="action-btn" onclick="handleSubmit()">确认提交</button>
-        <div class="footnote">信息仅用于业务审核，我们将严格保密</div>
+        </form>
     </div>
 
     <script>
-        // 简单交互反馈
-        function handleSubmit() {
-            const legal = document.getElementById('legalPerson').value.trim();
-            const entity = document.getElementById('entityName').value.trim();
-            const id = document.getElementById('idNumber').value.trim();
-            const phone = document.getElementById('phone').value.trim();
+        (function() {
+            'use strict';
 
-            if (!legal || !entity || !id || !phone) {
-                alert('请完整填写法人、主体名称、身份证号及手机号（带 * 为必填）');
-                return;
+            // ----- DOM 引用 -----
+            const form = document.getElementById('taxForm');
+            const legalPerson = document.getElementById('legalPerson');
+            const entityName = document.getElementById('entityName');
+            const idNumber = document.getElementById('idNumber');
+            const phone = document.getElementById('phone');
+            const business = document.getElementById('business');
+            const submitBtn = document.getElementById('submitBtn');
+            const successBanner = document.getElementById('successBanner');
+
+            // 错误信息元素
+            const legalPersonError = document.getElementById('legalPersonError');
+            const entityNameError = document.getElementById('entityNameError');
+            const idNumberError = document.getElementById('idNumberError');
+            const phoneError = document.getElementById('phoneError');
+            const businessError = document.getElementById('businessError');
+
+            // 所有输入字段（用于重置错误状态）
+            const allInputs = [legalPerson, entityName, idNumber, phone, business];
+            const errorMap = {
+                legalPerson: legalPersonError,
+                entityName: entityNameError,
+                idNumber: idNumberError,
+                phone: phoneError,
+                business: businessError,
+            };
+
+            // ----- 辅助函数 -----
+            function showError(input, errorEl) {
+                input.classList.add('error');
+                errorEl.classList.add('visible');
             }
 
-            // 简单的身份证和手机号格式提示（非严格校验，仅演示）
-            if (id.length !== 18) {
-                alert('温馨提示：身份证号一般为18位，请核对后提交。');
-                return;
-            }
-            if (!/^1\d{10}$/.test(phone)) {
-                alert('温馨提示：手机号格式为11位数字，请核对后提交。');
-                return;
+            function hideError(input, errorEl) {
+                input.classList.remove('error');
+                errorEl.classList.remove('visible');
             }
 
-            alert('✅ 表单已提交（演示交互）\n\n法人：' + legal + '\n主体：' + entity + '\n业务：' + document.getElementById('business').value || '未填写');
-        }
+            function clearAllErrors() {
+                allInputs.forEach(input => {
+                    input.classList.remove('error');
+                });
+                Object.values(errorMap).forEach(el => {
+                    el.classList.remove('visible');
+                });
+            }
 
-        // 按回车键可触发提交（增强体验）
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+            // ----- 验证函数 (返回 boolean) -----
+            function validateLegalPerson(val) {
+                const trimmed = val.trim();
+                return trimmed.length >= 2 && trimmed.length <= 20 && /^[\u4e00-\u9fa5a-zA-Z·\s]+$/.test(trimmed);
+            }
+
+            function validateEntityName(val) {
+                const trimmed = val.trim();
+                return trimmed.length >= 2 && trimmed.length <= 50;
+            }
+
+            function validateIdNumber(val) {
+                const trimmed = val.trim().toUpperCase();
+                // 18位，最后一位可能是数字或X
+                return /^\d{17}[\dX]$/.test(trimmed);
+            }
+
+            function validatePhone(val) {
+                const trimmed = val.trim();
+                return /^1[3-9]\d{9}$/.test(trimmed);
+            }
+
+            function validateBusiness(val) {
+                const trimmed = val.trim();
+                return trimmed.length >= 5 && trimmed.length <= 500;
+            }
+
+            // ----- 实时字段验证 (失焦时) -----
+            function setupFieldValidation() {
+                const fieldConfigs = [{
+                    input: legalPerson,
+                    errorEl: legalPersonError,
+                    validator: validateLegalPerson,
+                }, {
+                    input: entityName,
+                    errorEl: entityNameError,
+                    validator: validateEntityName,
+                }, {
+                    input: idNumber,
+                    errorEl: idNumberError,
+                    validator: validateIdNumber,
+                }, {
+                    input: phone,
+                    errorEl: phoneError,
+                    validator: validatePhone,
+                }, {
+                    input: business,
+                    errorEl: businessError,
+                    validator: validateBusiness,
+                }, ];
+
+                fieldConfigs.forEach(({ input, errorEl, validator }) => {
+                    input.addEventListener('blur', function() {
+                        const val = this.value;
+                        if (val.trim() === '') {
+                            // 空值暂不报错，提交时统一处理；但清除错误状态
+                            hideError(this, errorEl);
+                            return;
+                        }
+                        if (validator(val)) {
+                            hideError(this, errorEl);
+                        } else {
+                            showError(this, errorEl);
+                        }
+                    });
+
+                    // 输入时即时清除错误状态（如果已经正确）
+                    input.addEventListener('input', function() {
+                        const val = this.value;
+                        if (validator(val)) {
+                            hideError(this, errorEl);
+                        } else {
+                            // 如果之前有错误，保持显示；但如果为空，我们隐藏错误（避免空框红色干扰）
+                            if (val.trim() === '') {
+                                hideError(this, errorEl);
+                            }
+                            // 否则保留错误（但也可选择不实时显示，由blur控制）
+                            // 为了更好体验，我们只在非空且错误时显示
+                            if (val.trim() !== '' && !validator(val)) {
+                                showError(this, errorEl);
+                            } else if (val.trim() === '') {
+                                hideError(this, errorEl);
+                            }
+                        }
+                    });
+                });
+            }
+
+            // ----- 表单提交 -----
+            function handleSubmit(e) {
                 e.preventDefault();
-                handleSubmit();
+
+                // 1. 清除所有旧错误 & 成功横幅
+                clearAllErrors();
+                successBanner.classList.remove('visible');
+
+                // 2. 获取值
+                const legalVal = legalPerson.value;
+                const entityVal = entityName.value;
+                const idVal = idNumber.value;
+                const phoneVal = phone.value;
+                const businessVal = business.value;
+
+                // 3. 验证
+                const isLegalValid = validateLegalPerson(legalVal);
+                const isEntityValid = validateEntityName(entityVal);
+                const isIdValid = validateIdNumber(idVal);
+                const isPhoneValid = validatePhone(phoneVal);
+                const isBusinessValid = validateBusiness(businessVal);
+
+                // 4. 显示错误
+                let hasError = false;
+
+                if (!isLegalValid) {
+                    showError(legalPerson, legalPersonError);
+                    hasError = true;
+                }
+                if (!isEntityValid) {
+                    showError(entityName, entityNameError);
+                    hasError = true;
+                }
+                if (!isIdValid) {
+                    showError(idNumber, idNumberError);
+                    hasError = true;
+                }
+                if (!isPhoneValid) {
+                    showError(phone, phoneError);
+                    hasError = true;
+                }
+                if (!isBusinessValid) {
+                    showError(business, businessError);
+                    hasError = true;
+                }
+
+                // 5. 如果有错误，聚焦到第一个错误字段
+                if (hasError) {
+                    const firstError = allInputs.find(input => input.classList.contains('error'));
+                    if (firstError) {
+                        firstError.focus();
+                        // 如果是 textarea 滚动到可见
+                        firstError.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                    }
+                    return;
+                }
+
+                // 6. 所有验证通过 → 模拟提交
+                submitBtn.disabled = true;
+                submitBtn.innerHTML =
+                    `<span class="material-symbols-outlined" aria-hidden="true">progress_activity</span> 提交中...`;
+
+                // 模拟异步请求
+                setTimeout(() => {
+                    // 显示成功
+                    successBanner.classList.add('visible');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML =
+                        `<span class="material-symbols-outlined" aria-hidden="true">check_circle</span> 提交资料`;
+
+                    // 可选：清空表单（取消注释以下代码可清空）
+                    // form.reset();
+                    // clearAllErrors();
+
+                    // 成功后滚动到成功提示
+                    successBanner.scrollIntoView({ block: 'center', behavior: 'smooth' });
+
+                    // 5秒后自动隐藏成功提示（但保留提交内容）
+                    setTimeout(() => {
+                        // 但如果用户再次提交，我们会重新显示，所以这里不自动隐藏，让用户手动刷新或继续
+                        // 为了更好体验，我们保留成功提示，直到用户再次提交
+                    }, 5000);
+
+                }, 1200);
             }
-        });
+
+            // ----- 初始化 -----
+            函数 初始化() {
+                设置字段验证();
+                表单.addEventListener('submit', handleSubmit);
+
+                // 额外：点击提交时如果成功横幅可见，先隐藏
+                表单.addEventListener('提交', 函数() {
+                    successBanner.classList.remove('visible');
+                });
+
+                // 如果有任何输入变化，且成功横幅可见，自动隐藏（让用户知道状态已变）
+                allInputs.forEach(input => {
+                    input.addEventListener('input', function() {
+                        如果 (successBanner.classList.包含('visible')) {
+                            successBanner.classList.remove('visible');
+                        }
+                    });
+                });
+            }
+
+            init();
+
+        })();
     </script>
 
 </body>
 </html>
-```
