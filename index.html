@@ -690,19 +690,19 @@
             }
 
             // ----- 初始化 -----
-            函数 初始化() {
-                设置字段验证();
-                表单.addEventListener('submit', handleSubmit);
+            function init() {
+                setupFieldValidation();
+                form.addEventListener('submit', handleSubmit);
 
                 // 额外：点击提交时如果成功横幅可见，先隐藏
-                表单.addEventListener('提交', 函数() {
+                form.addEventListener('submit', function() {
                     successBanner.classList.remove('visible');
                 });
 
                 // 如果有任何输入变化，且成功横幅可见，自动隐藏（让用户知道状态已变）
                 allInputs.forEach(input => {
                     input.addEventListener('input', function() {
-                        如果 (successBanner.classList.包含('visible')) {
+                        if (successBanner.classList.contains('visible')) {
                             successBanner.classList.remove('visible');
                         }
                     });
